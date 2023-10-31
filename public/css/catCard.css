@@ -1,0 +1,17 @@
+.Cat_Card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 40px;
+    font-weight: bold;
+
+    margin: auto;
+    width: 600px;
+}
+
+.Cat_Card img {
+    width: 550px;
+    height: 550px;
+}
