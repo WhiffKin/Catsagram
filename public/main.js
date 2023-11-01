@@ -4,6 +4,7 @@ export async function create_Cat() {
 
     await create_CatCard(mainDiv);
     await create_CatVote(mainDiv);
+    applyButtonFunctions();
 }
 
 async function create_CatCard(div) {
@@ -51,3 +52,33 @@ async function create_CatVote(div) {
     div.append(voteContainer);
 }
 
+export function applyButtonFunctions() {
+    const clearVote = () => {
+        const upvote = document.querySelector(".Cat_Upvote")
+        const downvote = document.querySelector(".Cat_Downvote")
+        upvote.setAttribute("data-checked", "unchecked")
+        downvote.setAttribute("data-checked", "unchecked")
+    }
+
+    const nextCatFunc = async (e) => {
+        const name = document.querySelector("#Cat_Name");
+        const img = document.querySelector("#Cat_Img");
+
+        let catData = await fetch("https://api.thecatapi.com/v1/images/search?has_breeds=1&api_key=live_VYTaEUgfdnZx4OKDQrWiBjN8GGHBHXFXppa3GOx2NGMxuwn8aftNmVsZILeHeFZ2");
+        catData = (await catData.json())[0];
+
+        name.innerText = catData.breeds[0].name;
+        img.setAttribute("src", catData.url);
+        clearVote();
+    }
+    document.querySelector(".Cat_Next").addEventListener("click", nextCatFunc);
+
+    const voteFunc = (e) => {
+        clearVote();
+        if (e.currentTarget.getAttribute("data-checked") === "unchecked") 
+            e.currentTarget.setAttribute("data-checked", "checked")
+        else e.currentTarget.setAttribute("data-checked", "unchecked")
+    }
+    document.querySelector(".Cat_Upvote").addEventListener("click", voteFunc);
+    document.querySelector(".Cat_Downvote").addEventListener("click", voteFunc);
+}
