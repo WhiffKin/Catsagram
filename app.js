@@ -1,6 +1,9 @@
 const http = require("http");
 const { readFileSync } = require("fs");
 const path = require("path");
+const { runInNewContext } = require("vm");
+
+const catData = {}
 // Create a server using `http`
 const server = http.createServer((req, res) => {
   console.log(`Incoming Request - Method: ${req.method} | URL: ${req.url}`);
@@ -53,6 +56,29 @@ const server = http.createServer((req, res) => {
           "in assets folder"
         );
       }
+    }
+    // Saving Cat Data
+    if (req.method === "POST" && req.url === "/cats") {
+      const {id, url, name} = req.body;
+      catData[id] = {
+        url,
+        name,
+        comments:[],
+        upvotes: 0, 
+        downvotes: 0
+      }
+      res.statusCode = 201;
+      res.setHeader("Location", `/cats/${id}`)
+      return res.end();
+    }
+    // Getting Cat Data
+    const splitURL = req.url.split("/");
+    splitURL.unshift()
+    if (req.method === "GET" && splitURL[0] === "cats" && catData.contains(splitURL[1])) {
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json")
+      const resBody = JSON.stringify(catData[splitURL[1]]);
+      return res.end(resBody);
     }
     // Page Not Found
     res.statusCode = 404;
