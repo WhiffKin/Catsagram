@@ -3,7 +3,7 @@ const { readFileSync } = require("fs");
 const path = require("path");
 const { runInNewContext } = require("vm");
 
-const catData = {}
+const pokeData = {}
 // Create a server using `http`
 const server = http.createServer((req, res) => {
   console.log(`Incoming Request - Method: ${req.method} | URL: ${req.url}`);
@@ -57,27 +57,42 @@ const server = http.createServer((req, res) => {
         );
       }
     }
-    // Saving Cat Data
-    if (req.method === "POST" && req.url === "/cats") {
-      const {id, url, name} = req.body;
-      catData[id] = {
-        url,
-        name,
-        comments:[],
-        upvotes: 0, 
-        downvotes: 0
-      }
-      res.statusCode = 201;
-      res.setHeader("Location", `/cats/${id}`)
+    // Adding to Upvote
+    const splitURL = req.url.split("/");
+    splitURL.shift()
+    if (req.method === "PATCH" && splitURL[0] === "pokemon" && splitURL[2] === "upvote" && pokeData.hasOwnProperty(splitURL[1])) {
+      pokeData[splitURL[1]].upvotes++;
+      res.statusCode = 200;
+      res.setHeader("Location", `/pokemon/:id`)
       return res.end();
     }
-    // Getting Cat Data
-    const splitURL = req.url.split("/");
-    splitURL.unshift()
-    if (req.method === "GET" && splitURL[0] === "cats" && catData.contains(splitURL[1])) {
+    // Adding to Downvote
+    if (req.method === "PATCH" && splitURL[0] === "pokemon" && splitURL[2] === "downvote" && pokeData.hasOwnProperty(splitURL[1])) {
+      pokeData[splitURL[1]].downvotes++;
+      res.statusCode = 200;
+      res.setHeader("Location", `/pokemon/:id`)
+      return res.end();
+    }
+    // Adding to Comments
+    if (req.method === "PATCH" && splitURL[0] === "pokemon" && splitURL[2] === "comments" && pokeData.hasOwnProperty(splitURL[1])) {
+      const {comment} = reqBody;
+      pokeData[splitURL[1]].comments.push(comment);
+      res.statusCode = 200;
+      res.setHeader("Location", `/pokemon/:id`)
+      return res.end();
+    }
+    // Getting pokemon Votes
+    if (req.method === "GET" && splitURL[0] === "pokemon" && splitURL[2] === "votes" && pokeData.hasOwnProperty(splitURL[1])) {
       res.statusCode = 200;
       res.setHeader("Content-Type", "application/json")
-      const resBody = JSON.stringify(catData[splitURL[1]]);
+      const resBody = JSON.stringify([pokeData[splitURL[1]].upvotes, pokeData[splitURL[1]].downvotes]);
+      return res.end(resBody);
+    }
+    // Getting pokemon Data
+    if (req.method === "GET" && splitURL[0] === "pokemon" && pokeData.hasOwnProperty(splitURL[1])) {
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json")
+      const resBody = JSON.stringify(pokeData[splitURL[1]]);
       return res.end(resBody);
     }
     // Page Not Found
@@ -88,7 +103,30 @@ const server = http.createServer((req, res) => {
     res.end();
   });
 });
-// Set the port to 5000
-const port = 5000;
-// Tell the port to listen for requests on localhost:5000
-server.listen(port, () => console.log("Server is running on port", port));
+
+async function initializeServer() {
+  const resData = await fetch("https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1292%22")
+    .then(response => response.json());
+    
+  let acc = 1;
+  resData.results.forEach(pokemon => {
+    pokeData[acc++] = {
+      name: pokemon.name,
+      url: pokemon.url,
+      comments: [],
+      upvotes: 0,
+      downvotes: 0
+    };
+  })
+
+  pokeData["4"].comments.push("Just caught my first one!!!");
+  pokeData["4"].comments.push("Spotted at one at Lumoise City!");
+  pokeData["4"].comments.push("Would anyone want to trade for a Bulbasaur?");
+  pokeData["4"].upvotes = 151;
+
+  // Set the port to 5000
+  const port = 5000;
+  // Tell the port to listen for requests on localhost:5000
+  server.listen(port, () => console.log("Server is running on port", port));
+}
+initializeServer();

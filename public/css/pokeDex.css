@@ -36,57 +36,6 @@
     margin: 20px 2px; 
 }
 
-.bigger-circle {
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    border: 2px black solid;
-}
-
-.big-circle {
-    border-radius: 50%;
-    width: 65px;
-    height: 65px;
-    border: 2px black solid;
-}
-
-.medium-circle {
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    border: 2px black solid;
-}
-
-.small-circle {
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    border: 2px black solid;
-}
-
-.smallest-circle {
-    border-radius: 50%;
-    width: 10px;
-    height: 10px;
-    border: 2px black solid;
-}
-
-.stripes {
-    width: 25px;
-    height: 25px;
-    background: repeating-linear-gradient(
-    transparent,
-    transparent 5px,
-    black 3px,
-    black 8px);
-}
-
-.long-dash {
-    width: 60px;
-    height: 10px;
-    border: 2px black solid;
-}
-
 #pokedex-left-body {
     position: relative;
     top: -40px;
@@ -287,6 +236,7 @@
     background-color: aliceblue;
     border: 2px black solid;
     border-radius: 5px;
+    cursor: pointer;
 }
 
 #pokedex-upvote {
@@ -316,6 +266,7 @@
     justify-content: center;
     align-items: center;
     color: white;
+    font-size: 10px;
     width: 30px;
     height: 30px;
     background-color: rgb(58, 58, 58);
@@ -327,8 +278,72 @@
     background-image: url("../images/NextCat.png");
     background-repeat: no-repeat;
     background-size: cover;
+    cursor: pointer;
 }
 
+#pokedex-track {
+    background-image: url("../images/Track.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    cursor: pointer;
+}
+
+.bigger-circle {
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    border: 2px black solid;
+}
+
+.big-circle {
+    border-radius: 50%;
+    width: 65px;
+    height: 65px;
+    border: 2px black solid;
+}
+
+.medium-circle {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    border: 2px black solid;
+}
+
+.small-circle {
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    border: 2px black solid;
+}
+
+.smallest-circle {
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    border: 2px black solid;
+}
+
+.stripes {
+    width: 25px;
+    height: 25px;
+    background: repeating-linear-gradient(
+    transparent,
+    transparent 5px,
+    black 3px,
+    black 8px);
+}
+
+.long-dash {
+    width: 60px;
+    height: 10px;
+    border: 2px black solid;
+}
+
+.glow {
+    box-shadow: 0 0 20px rgba(255, 255, 255, .8);
+}
+
+.white {background-color: aliceblue;}
 .grey {background-color: rgb(172, 172, 172);}
 .dark-grey {background-color: rgb(58, 58, 58);}
 .red {background-color: red;}

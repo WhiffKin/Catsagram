@@ -1,5 +1,5 @@
-import { create_Cat } from "./main.js";
+import { create_Pokedex } from "./main.js";
 
-window.onload = () => {
-    create_Cat();
+window.onload = async () => {
+    create_Pokedex();
 }
