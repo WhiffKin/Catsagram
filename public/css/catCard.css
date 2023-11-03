@@ -26,10 +26,6 @@
 
 
 .Cat_Next {
-    background-image: url("../images/NextCat.png");
-    background-repeat: no-repeat;
-    background-color: transparent;
-    background-size: cover;
     
     border: none;
     width: 50px;

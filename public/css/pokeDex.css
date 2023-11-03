@@ -227,6 +227,9 @@
 }
 
 #pokedex-details {
+    box-sizing:border-box;
+    padding: 3px;
+    color: white;
     width: 275px;
     height: 120px;
     border: 2px black solid;
@@ -286,12 +289,44 @@
     border-radius: 5px;
 }
 
+#pokedex-upvote {
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+#pokedex-upvote[data-checked="checked"] {
+    background-image: url('../images/UpvoteCat-Selected.png');
+}
+#pokedex-upvote[data-checked="unchecked"] {
+    background-image: url('../images/UpvoteCat-Unselected.png');
+}
+
+#pokedex-downvote {
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+#pokedex-downvote[data-checked="checked"] {
+    background-image: url('../images/DownvoteCat-Selected.png');
+}
+#pokedex-downvote[data-checked="unchecked"] {
+    background-image: url('../images/DownvoteCat-Unselected.png');
+}
+
 #pokedex-vote-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
     width: 30px;
     height: 30px;
     background-color: rgb(58, 58, 58);
     border: 2px black solid;
     border-radius: 5px;
+}
+
+#pokedex-next {
+    background-image: url("../images/NextCat.png");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .grey {background-color: rgb(172, 172, 172);}
