@@ -1,13 +1,13 @@
 export async function create_Cat() {
     const mainDiv = document.querySelector(".pokedex-container");
 
+    applyButtonFunctions();
     await create_CatCard(mainDiv);
     await create_CatVote();
-    // await create_CatComments(mainDiv);
-    applyButtonFunctions();
-    // await setData(mainDiv.getAttribute("data-id"),
-    //               mainDiv.getAttribute("data-url"),
-    //               mainDiv.getAttribute("data-name"));
+    await create_CatComments(mainDiv);
+    await setData(mainDiv.getAttribute("data-id"),
+                  mainDiv.getAttribute("data-url"),
+                  mainDiv.getAttribute("data-name"));
 }
 
 async function create_CatCard(div) {
@@ -76,26 +76,8 @@ function applyButtonFunctions() {
 }
 
 async function create_CatComments(div) {
-    const comments = document.createElement("textarea");
-    const input = document.createElement("input");
-    const submit = document.createElement("button");
-
-    comments.setAttribute("class", "Cat_Comments");
-    comments.setAttribute("readonly", true);
-
-    input.setAttribute("type", "text");
-    input.setAttribute("class", "Cat_Input");
-
-    submit.setAttribute("class", "Cat_InputSubmit");
-
-    const container = document.createElement("div");
-    container.style.display = "flex";
-    container.style.width = "400px";
-    container.style.justifyContent = "space-between";
-    container.style.alignItems = "center";
-    container.append(input, submit);
-
-    div.append(comments, container);
+    // TODO: removed input function. Add hover event to prompt, click event to pop up
+    // const input = document.querySelector("input");
 }
 
 async function setData(id, url, name) {
