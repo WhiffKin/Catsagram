@@ -1,14 +1,13 @@
 export async function create_Cat() {
-    const mainDiv = document.createElement("div");
-    mainDiv.setAttribute("class", "Cat_Card");
+    const mainDiv = document.querySelector(".pokedex-container");
 
     await create_CatCard(mainDiv);
-    await create_CatVote(mainDiv);
-    await create_CatComments(mainDiv);
-    applyButtonFunctions();
-    await setData(mainDiv.getAttribute("data-id"),
-                  mainDiv.getAttribute("data-url"),
-                  mainDiv.getAttribute("data-name"));
+    // await create_CatVote(mainDiv);
+    // await create_CatComments(mainDiv);
+    // applyButtonFunctions();
+    // await setData(mainDiv.getAttribute("data-id"),
+    //               mainDiv.getAttribute("data-url"),
+    //               mainDiv.getAttribute("data-name"));
 }
 
 async function create_CatCard(div) {
@@ -22,19 +21,14 @@ async function create_CatCard(div) {
         catData = (await catData.json())[0];
     }
 
-    const span = document.createElement("span");
-    const img = document.createElement("img");
+    const span = document.querySelector("#pokedex-details");
+    const img = document.querySelector("#pokedex-screen");
 
     div.setAttribute("data-id", catData.id);
     div.setAttribute("data-url", catData.url);
     div.setAttribute("data-name", catData.breeds[0].name);
     span.innerText = catData.breeds[0].name;
-    span.setAttribute("id", "Cat_Name");
     img.setAttribute("src", catData.url);
-    img.setAttribute("id", "Cat_Img");
-
-    div.append(span, img);
-    document.querySelector("body").append(div);
 }
 
 async function create_CatVote(div) {
