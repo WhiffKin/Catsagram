@@ -75,7 +75,7 @@ const server = http.createServer((req, res) => {
     }
     // Adding to Comments
     if (req.method === "PATCH" && splitURL[0] === "pokemon" && splitURL[2] === "comments" && pokeData.hasOwnProperty(splitURL[1])) {
-      const {comment} = reqBody;
+      const comment = reqBody.split("=")[1].split("+").join(" ");
       pokeData[splitURL[1]].comments.push(comment);
       res.statusCode = 200;
       res.setHeader("Location", `/pokemon/:id`)

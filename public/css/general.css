@@ -1,0 +1,80 @@
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #969696;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #797979;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #6c6c6c;
+}
+
+.bigger-circle {
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    border: 2px black solid;
+}
+
+.big-circle {
+    border-radius: 50%;
+    width: 65px;
+    height: 65px;
+    border: 2px black solid;
+}
+
+.medium-circle {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    border: 2px black solid;
+}
+
+.small-circle {
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    border: 2px black solid;
+}
+
+.smallest-circle {
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    border: 2px black solid;
+}
+
+.stripes {
+    width: 25px;
+    height: 25px;
+    background: repeating-linear-gradient(
+    transparent,
+    transparent 5px,
+    black 3px,
+    black 8px);
+}
+
+.long-dash {
+    width: 60px;
+    height: 10px;
+    border: 2px black solid;
+}
+
+.glow {
+    box-shadow: 0 0 20px rgba(255, 255, 255, .8);
+}
+
+.white {background-color: aliceblue;}
+.grey {background-color: rgb(172, 172, 172);}
+.dark-grey {background-color: rgb(58, 58, 58);}
+.red {background-color: red;}
+.yellow {background-color: yellow;}
+.green {background-color: green;}
+.blue {background-color: rgb(111, 111, 255);}

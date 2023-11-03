@@ -26,13 +26,24 @@ async function fill_PokeCard(div) {
 
     const span = document.querySelector("#pokedex-details");
     const img = document.querySelector("#pokedex-screen");
-
+    
+    const advancedPokeData = (await (await fetch(pokeData.url)).json());
+    console.log(advancedPokeData)
+    
     div.setAttribute("data-id", id);
     div.setAttribute("data-url", pokeData.url);
     div.setAttribute("data-name", pokeData.name);
     number.innerText = `#${id.toString().padStart(4, "0")}`
-    span.innerText = pokeData.name;
-    img.setAttribute("src", pokeData.url);
+    span.innerText = `Name: ${pokeData.name}
+
+Weight: ${advancedPokeData.weight}
+
+Height: ${advancedPokeData.height}
+
+Types: ${advancedPokeData.types.reduce((acc, type) => `${acc} ${type.type.name}`, "")}${advancedPokeData.stats.reduce((acc, statInfo) => `${acc}\n\n${capitalizeFirstLetter(statInfo.stat.name)}: ${statInfo.base_stat}`, "")}`;
+    const imgURL =Math.random() < .2 ?advancedPokeData.sprites.front_shiny : advancedPokeData.sprites.front_default;
+    img.setAttribute("src", imgURL? imgURL : advancedPokeData.sprites.front_default);
+
 
     fill_PokeComments(pokeData.comments);
     fill_PokeVote(pokeData.upvotes, pokeData.downvotes);
@@ -46,32 +57,13 @@ function applyButtonFunctions() {
         downvote.setAttribute("data-checked", "unchecked");
     }
 
-    const nextCatFunc = async (e) => {
-        const red = document.querySelector("#red-indicator");
-        const yellow = document.querySelector("#yellow-indicator");
-        const green = document.querySelector("#green-indicator");
-        const name = document.querySelector("#pokedex-details");
-        const img = document.querySelector("#pokedex-screen");
+    const nextPokemonFunc = async (e) => {
         const mainDiv = document.querySelector(".pokedex-container");
-
-        red.classList.add("glow");
-        let catData = await fetch("https://api.thecatapi.com/v1/images/search?has_breeds=1&api_key=live_VYTaEUgfdnZx4OKDQrWiBjN8GGHBHXFXppa3GOx2NGMxuwn8aftNmVsZILeHeFZ2");
-        red.classList.remove("glow");
-
-        yellow.classList.add("glow");
-        catData = (await catData.json())[0];
-        yellow.classList.remove("glow");
-
-        green.classList.add("glow");
-        setTimeout(() => green.classList.remove("glow"), 250);
-
-        mainDiv.setAttribute("data-id", catData.id);
-        name.innerText = catData.breeds[0].name;
-        img.setAttribute("src", catData.url);
         clearVote();
-        setData(catData.id);
+        setData(Math.floor(Math.random() * 1000) + 1);
+        fill_PokeCard(mainDiv);
     }
-    document.querySelector("#pokedex-next").addEventListener("click", nextCatFunc);
+    document.querySelector("#pokedex-next").addEventListener("click", nextPokemonFunc);
 
     const voteFunc = async (e) => {
         const id = document.querySelector(".pokedex-container").getAttribute("data-id");
@@ -99,12 +91,38 @@ function applyButtonFunctions() {
 }
 
 function create_PokeCommentInput() {
-    // TODO: removed input function. Add hover event to prompt, click event to pop up
-    // const input = document.querySelector("input");
+    const hoverButton = document.querySelector("#comment-input-button");
+    
+    hoverButton.addEventListener("mouseover", () => {
+        const container = document.querySelector("#comment-input-container");
+        const input = document.querySelector("#comment-input");
+        container.style.display = "flex";
+        input.focus()
+    })
+    hoverButton.addEventListener("mouseout", () => {
+        const container = document.querySelector("#comment-input-container");
+        container.style.display = "none";
+    })
+    hoverButton.addEventListener("click", async () => {
+        const container = document.querySelector("#comment-input-container");
+        const input = document.querySelector("#comment-input");
+        container.style.display = "flex";
+        await fetch(`/pokemon/${sessionStorage.id}/comments`, {
+            method:"PATCH",
+            headers:{"Content-Type": "application/x-www-form-urlencoded"},
+            body: new URLSearchParams({comment:input.value})
+        })
+        input.value = "";
+        let res = await fetch(`/pokemon/${sessionStorage.id}`);
+        res = await res.json();
+        fill_PokeComments(res.comments);
+    })
 }
 
-function fill_PokeComments(div) {
-
+function fill_PokeComments(comments) {
+    console.log(comments)
+    const commentDiv = document.querySelector("#pokedex-screen-comments");
+    commentDiv.innerText = comments.reduce((acc, el) => acc += el + "\n\n", "");
 }
 
 function fill_PokeVote(upvote, downvote) {
@@ -120,4 +138,12 @@ function fill_PokeVote(upvote, downvote) {
 
 async function setData(id) {
     sessionStorage.setItem("id", id);
+}
+
+function capitalizeFirstLetter(string) {
+    if (string === "hp") return "HP";
+    const stringArr = string.split("-");
+        string = stringArr.reduce((acc, el) => acc + el.charAt(0).toUpperCase() + el.slice(1) + "-", "");
+        string = string.slice(0, string.length-1)
+    return string;
 }
