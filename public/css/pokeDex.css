@@ -219,7 +219,7 @@
     height: 110px;
 }
 
-#pokedex-grid > div {
+#pokedex-grid > img {
     width: 45px;
     height: 45px;
     background-color: rgb(123, 152, 255);

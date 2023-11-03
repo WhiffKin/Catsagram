@@ -4,7 +4,7 @@ export async function create_Pokedex() {
     applyButtonFunctions();
     create_PokeCommentInput();
     await fill_PokeCard(mainDiv);
-    await setData(mainDiv.getAttribute("data-id"));
+    
 }
 
 async function fill_PokeCard(div) {
@@ -31,7 +31,6 @@ async function fill_PokeCard(div) {
     console.log(advancedPokeData)
     
     div.setAttribute("data-id", id);
-    div.setAttribute("data-url", pokeData.url);
     div.setAttribute("data-name", pokeData.name);
     number.innerText = `#${id.toString().padStart(4, "0")}`
     span.innerText = `Name: ${pokeData.name}
@@ -41,12 +40,16 @@ Weight: ${advancedPokeData.weight}
 Height: ${advancedPokeData.height}
 
 Types: ${advancedPokeData.types.reduce((acc, type) => `${acc} ${type.type.name}`, "")}${advancedPokeData.stats.reduce((acc, statInfo) => `${acc}\n\n${capitalizeFirstLetter(statInfo.stat.name)}: ${statInfo.base_stat}`, "")}`;
-    const imgURL =Math.random() < .2 ?advancedPokeData.sprites.front_shiny : advancedPokeData.sprites.front_default;
-    img.setAttribute("src", imgURL? imgURL : advancedPokeData.sprites.front_default);
+    let imgURL =Math.random() < .2 ?advancedPokeData.sprites.front_shiny : advancedPokeData.sprites.front_default;
+    imgURL = imgURL? imgURL : advancedPokeData.sprites.front_default;
+    
+    img.setAttribute("src", imgURL);
+    div.setAttribute("data-url", imgURL);
 
-
+    setData(div.getAttribute("data-id"), div.getAttribute("data-url"));
     fill_PokeComments(pokeData.comments);
     fill_PokeVote(pokeData.upvotes, pokeData.downvotes);
+    fill_Tracked();
 }
 
 function applyButtonFunctions() {
@@ -84,9 +87,45 @@ function applyButtonFunctions() {
     document.querySelector("#pokedex-downvote").addEventListener("click", voteFunc);
 
     const trackFunc = () => {
-        localStorage.setItem()
+        const red = document.querySelector("#red-indicator");
+        const yellow = document.querySelector("#yellow-indicator");
+        const green = document.querySelector("#green-indicator");
+        
+        for (let i = 0; i < 10; i++) {
+            const tracked = sessionStorage.getItem(`tracked${i}`);
+            if (!tracked) break;
+
+            const [id, url] = tracked.split("&");
+            console.log(sessionStorage.id, id);
+            if (sessionStorage.id == id) {
+                red.classList.add("glow");
+                setTimeout(() => {
+                    red.classList.remove("glow");
+                }, 250);
+                return;
+            }
+        }
+        let prevTracked;
+        yellow.classList.add("glow");
+        for (let i = 0; i < 10; i++) {
+            const tracked = sessionStorage.getItem(`tracked${i}`);
+            sessionStorage.setItem(`tracked${i}`, prevTracked)
+            if (!tracked) break;
+            prevTracked = tracked;
+            // const [url, id] = tracked;
+            // trackedCont.children[i].setAttribute("data-id", id);
+            // trackedCont.children[i].style.backgroundImage = `url('${url}')`;
+        }
+        yellow.classList.remove("glow");
+        sessionStorage.setItem(`tracked0`, `${sessionStorage.id}&${sessionStorage.url}`)
+
+        green.classList.add("glow");
+        fill_Tracked();
+        setTimeout(() => {
+            green.classList.remove("glow");
+        }, 250)
     }
-    document.querySelector("#pokedex-track")
+    document.querySelector("#pokedex-track").addEventListener("click", trackFunc)
 
 }
 
@@ -136,8 +175,21 @@ function fill_PokeVote(upvote, downvote) {
     voteText.innerText = upvote - downvote;
 }
 
-async function setData(id) {
+function fill_Tracked () {
+    const trackedCont = document.querySelector("#pokedex-grid");
+    for (let i = 0; i < 10; i++) {
+        const tracked = sessionStorage.getItem(`tracked${i}`);
+        if (!tracked) break;
+        const [id, url] = tracked.split("&");
+        console.log(url, id)
+        trackedCont.children[i].setAttribute("data-id", id);
+        trackedCont.children[i].setAttribute("src", url);
+    }
+}
+
+async function setData(id, url) {
     sessionStorage.setItem("id", id);
+    sessionStorage.setItem("url", url);
 }
 
 function capitalizeFirstLetter(string) {
